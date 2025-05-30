@@ -4,21 +4,22 @@ import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message
 from aiogram.filters import Command
-from telegram_parser_bot import run_parser_for_user  # Импорт парсера
+from telegram_parser_bot import run_parser_for_user  # импорт парсера
 
-BOT_TOKEN = "PASTE_YOUR_BOT_TOKEN_HERE"
+import os
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
 dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
-    await message.answer("Привет! Отправь команду /parse чтобы получить свежие объявления.")
+    await message.answer("Привет! Отправь /parse, чтобы получить новые объявления.")
 
 @dp.message(Command("parse"))
 async def cmd_parse(message: Message):
     user_id = str(message.from_user.id)
-    await message.answer("🔍 Начинаю парсинг, подожди немного...")
+    await message.answer("🔍 Идёт парсинг...")
 
     async for link in run_parser_for_user(user_id):
         if link:
